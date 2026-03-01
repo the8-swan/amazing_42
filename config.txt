@@ -1,0 +1,8 @@
+    WIDTH       = 50
+HEIGHT= 20
+#helloo
+ENTRY=9,9     
+    EXIT    =   42,19
+OUTPUT_FILE=maze.txt
+PERFECT  = True  
+SEED = ########
