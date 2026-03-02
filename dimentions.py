@@ -36,7 +36,6 @@ buttons = [
 
 colors = [
     {"background": 0x0F0F0F},  # Almost black
-    {"entry": 0x0080FF},  # Light gray
     {"button_bg": 0x2A2A2A},  # Dark gray
     {"base_wall_color": 0x00FF00},  # White
     {
@@ -53,7 +52,8 @@ colors = [
             0xFF6600,  # 10. Bright orange (sunset)
         ]
     },
-    {"exit": 0xFF0033},
+    {"entry": 0xFB542B },
+    {"exit": 0x0000FF},
     {"path_color": 0xFFFFFF},
 ]
 

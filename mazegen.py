@@ -124,28 +124,31 @@ class Maze:
             for cell in row:
                 cell.is_visited = False
                 cell.walls = {"S": True, "N": True, "W": True, "E": True}
-
     def bfs_algo(self):
         for r in range(len(self.cells)):
             for c in range(len(self.cells[0])):
                 self.cells[r][c].is_visited = False
 
+
         x, y = self.entry
         d_x, d_y = self.exit
-
-        queue = []
+        
+        queue = deque()
         queue.append((x, y))
         data = deque()
         self.cells[y][x].is_visited = True
 
         parent = {}
 
+        found = False
+
         while queue:
-            x, y = queue.pop(0)
+            x, y = queue.popleft()
 
             if x == d_x and y == d_y:
+                found = True
                 break
-
+                                   
             key = list(self.direction.keys())
 
             i = 0
@@ -154,22 +157,27 @@ class Maze:
                 m_x, m_y = x + n_x, y + n_y
 
                 if 0 <= m_x < self.width and 0 <= m_y < self.height:
-                    if (
-                        not self.cells[y][x].walls[m_dir]
+                    if (not self.cells[y][x].walls[m_dir]
                         and not self.cells[m_y][m_x].walls[n_dir]
-                        and not self.cells[m_y][m_x].is_visited
-                    ):
+                        and not self.cells[m_y][m_x].is_visited):
+
                         self.cells[m_y][m_x].is_visited = True
                         parent[(m_x, m_y)] = ((x, y), m_dir)
                         queue.append((m_x, m_y))
 
                 i += 1
 
-        cur = (d_x, d_y)
+        if not found:
+            return None
+
+        cur = self.exit
+
         while cur != self.entry:
             (m_x, m_y), d = parent[cur]
+
             if (m_x, m_y) != self.entry:
                 data.appendleft((m_x, m_y))
+
             x, y = cur
             self.cells[y][x].path = True
             cur = (m_x, m_y)
@@ -177,5 +185,7 @@ class Maze:
 
         x, y = self.entry
         self.cells[y][x].path = True
+
         self.dirs.reverse()
-        self.path = data
+
+        self.path = data 
