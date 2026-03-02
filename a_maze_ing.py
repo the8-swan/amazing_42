@@ -1,6 +1,7 @@
 import sys
 import config_validation
-from maze import Maze
+from mazegen import Maze
+from maze_renderer import maze_draw
 
 def main():
     args = sys.argv[1:]
@@ -17,7 +18,7 @@ def main():
                 maze = Maze(data)
                 maze.my_42()
                 maze.dsf_algorith(0, 0)
-                maze_renderer.maze_draw(maze)
+                maze_draw(maze)
         except (FileNotFoundError, config_validation.ErrorInConfigFile) as e:
             print(e)
 

@@ -1,0 +1,84 @@
+maze_renderer.py
+│
+├── 1. IMPORTS
+│   └── mlx, random, etc.
+│
+├── 2. CONSTANTS & CONFIGURATION
+│   ├── Window/Canvas dimensions
+│   ├── Button positions and sizes
+│   └── Animation settings
+│
+├── 3. COLOR SCHEMES
+│   ├── Color dictionaries (background, walls, buttons, etc.)
+│   └── Wall color palettes for cycling
+│
+├── 4. FONT DATA
+│   └── Character definitions (keep existing font dict)
+│
+├── 5. LOW-LEVEL IMAGE CLASS
+│   └── class ImageBuffer:
+│       ├── __init__(addr, bpp, size_line, endian)
+│       ├── put_pixel(x, y, color)
+│       ├── fill_rect(x, y, w, h, color)
+│       └── clear(color)
+│
+├── 6. BUTTON CLASS
+│   └── class Button:
+│       ├── __init__(x, y, w, h, text, callback)
+│       ├── draw(image_buffer, colors)
+│       ├── is_clicked(x, y) -> bool
+│       └── draw_text(image_buffer, colors)
+│
+├── 7. ANIMATION STATE CLASS
+│   └── class MazeAnimationState:
+│       ├── __init__(maze, renderer_params)
+│       ├── current_x, current_y
+│       ├── is_animating flag
+│       ├── color_index
+│       └── is_path_visible
+│
+├── 8. UTILITY FUNCTIONS
+│   ├── calculate_maze_offset(maze) -> (startx, starty)
+│   ├── get_cell_pixel_coords(x, y, maze, offset) -> rect coords
+│   └── cycle_wall_color() -> next color
+│
+├── 9. DRAWING FUNCTIONS
+│   ├── draw_horizontal_walls(image, maze, color, offset, x_range, y_range)
+│   ├── draw_vertical_walls(image, maze, color, offset, x_range, y_range)
+│   ├── draw_entry_exit_cells(image, maze, offset, colors)
+│   ├── draw_full_maze(image, maze, color, offset)
+│   └── draw_text_on_button(image, text, button_rect, color)
+│
+├── 10. PATH DRAWING FUNCTIONS
+│   ├── draw_path(image, maze, path, color, offset)
+│   └── clear_path(image, maze, path, bg_color, offset)
+│
+├── 11. ANIMATION FUNCTIONS
+│   ├── animation_update_frame(state) -> continue: bool
+│   └── clear_maze_area(image, maze, bg_color)
+│
+├── 12. BUTTON CALLBACK FUNCTIONS
+│   ├── on_regenerate_maze(state)
+│   ├── on_toggle_path(state)
+│   └── on_change_color(state)
+│
+├── 13. EVENT HANDLERS
+│   ├── mouse_click_handler(button, x, y, state)
+│   └── window_close_handler(state)
+│
+├── 14. UI SETUP FUNCTIONS
+│   ├── create_buttons() -> list of Button objects
+│   ├── draw_button_panel(image, buttons, colors)
+│   └── draw_all_ui(maze_image, button_image, state)
+│
+├── 15. MAIN LOOP HOOK
+│   └── animation_loop_hook(state) -> int
+│
+└── 16. MAIN ENTRY POINT
+    └── def maze_draw(maze):
+        ├── MLX initialization
+        ├── Create images
+        ├── Create buttons
+        ├── Create animation state
+        ├── Setup event hooks
+        └── Start loop
