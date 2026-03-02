@@ -24,6 +24,8 @@ class Maze:
         self.seed = data["SEED"] if data["SEED"] else None
         # cells[row][col]
         self.cells = self.create_cells(self.width, self.height)
+        self.algo = "dfs"
+
 
     class Cell:
         def __init__(self, row, column):
@@ -189,3 +191,71 @@ class Maze:
         self.dirs.reverse()
 
         self.path = data 
+    
+    def wilson_algo(self):
+
+        unvisited = []
+        visited = []
+
+        for r in range(len(self.cells)):
+            for c in range(len(self.cells[0])):
+                if self.cells[r][c].is_visited:
+                    visited.append((c, r))
+        
+        for r in range(len(self.cells)):
+            for c in range(len(self.cells[0])):
+                if not self.cells[r][c].is_visited:
+                    unvisited.append((c, r))
+
+        x, y = random.choice(unvisited)
+        self.cells[y][x].is_visited = True
+        unvisited.remove((x, y))
+
+        while unvisited:
+            path = []
+            x, y = random.choice(unvisited)
+            path.append((x, y))
+
+            while not self.cells[y][x].is_visited:
+
+                key = random.choice(list(self.direction.keys()))
+
+                dx, dy, m_dir, n_dir = self.direction[key]
+                nx, ny = x + dx, y + dy
+
+                if 0 <= nx < self.width and 0 <= ny < self.height:
+                    if (nx, ny) not in visited:
+                        if (nx, ny) in path:
+                            index = path.index((nx, ny))
+                            path = path[:index+1]
+                        else:
+                            path.append((nx, ny))
+                        x, y = nx, ny
+            for i in range(len(path)-1):
+                x, y = path[i]
+                nx, ny = path[i+1]
+            
+                if (x+1, y) == (nx, ny):
+                    self.cells[y][x].walls['E'] = False
+                    self.cells[ny][nx].walls['W'] = False
+                elif (x-1, y) == (nx, ny):
+                    self.cells[y][x].walls['W'] = False
+                    self.cells[ny][nx].walls['E'] = False
+                elif (x, y+1) == (nx, ny):
+                    self.cells[y][x].walls['S'] = False
+                    self.cells[ny][nx].walls['N'] = False
+                elif (x, y-1) == (nx, ny):
+                    self.cells[y][x].walls['N'] = False
+                    self.cells[ny][nx].walls['S'] = False
+
+                if not self.cells[y][x].is_visited: 
+                    self.cells[y][x].is_visited = True
+                    if (x, y) in unvisited:
+                        unvisited.remove((x, y))
+            lx, ly = path[0]
+            if not self.cells[ly][lx].is_visited:
+                self.cells[ly][lx].is_visited = True
+                if (lx, ly) in unvisited:
+                    unvisited.remove((lx, ly))
+
+ 

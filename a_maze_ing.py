@@ -17,7 +17,6 @@ def main():
                 print(data)
                 maze = Maze(data)
                 maze.my_42()
-                maze.dsf_algorith(0, 0)
                 maze_draw(maze)
         except (FileNotFoundError, config_validation.ErrorInConfigFile) as e:
             print(e)

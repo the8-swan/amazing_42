@@ -347,7 +347,10 @@ class MazeApp:
                         self.maze_addr.set_color_to_image(800, 800, dimentions.colors[0]["background"])
                         self.maze.reset_maze()
                         self.maze.my_42()
-                        self.maze.dsf_algorith(0, 0)
+                        if self.maze.algo == "wilson":
+                            self.maze.wilson_algo()
+                        else:
+                            self.maze.dsf_algorith(0,0)
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
@@ -366,6 +369,21 @@ class MazeApp:
                         else:
                             self.path_draw()
                             self.maze.is_path_draw = True
+                    elif dimentions.buttons[i]["text"] == "change algorithm":
+                        self.maze_addr.set_color_to_image(800, 800, dimentions.colors[0]["background"])
+                        self.maze.reset_maze()
+                        self.maze.my_42()
+                        if self.maze.algo == "dfs":
+                            self.maze.algo = "wilson"
+                            self.maze.wilson_algo()
+                        else:
+                            self.maze.algo = "dfs"
+                            self.maze.dsf_algorith(0, 0)
+                        self.currentx = 0
+                        self.currenty = 0
+                        self.is_animating = True
+                        break
+
 
             i += 1
 
@@ -376,7 +394,7 @@ class MazeApp:
 
 def maze_draw(maze):
     mazeApp = MazeApp(maze)
-
+    mazeApp.maze.dsf_algorith(0, 0)
     mazeApp.mlx_ptr.mlx_hook(mazeApp.win, 33, 0, mazeApp.destroy_win, None)
     mazeApp.mlx_ptr.mlx_loop_hook(mazeApp.mlx, mazeApp.upade_image_maze, None)
     mazeApp.mlx_ptr.mlx_mouse_hook(mazeApp.win, mazeApp.clicked_button, None)

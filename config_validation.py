@@ -8,7 +8,7 @@ class ErrorInConfigFile(Exception):
 
 def data_validation(data_dict: dict):
     # PERFECT validation
-    if data_dict["PERFECT"].upper() != ("TRUE" or "FALSE"):
+    if data_dict["PERFECT"].upper() not in ("TRUE" , "FALSE"):
         raise ErrorInConfigFile("'PERFECT' value should be TRUE or FALSE")
 
     if data_dict["PERFECT"].upper() == "TRUE":
