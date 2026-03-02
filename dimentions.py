@@ -7,8 +7,8 @@ image_maze_y = 800
 image_button_x = 400
 image_button_y = 800
 
-sep_top_button = 110
-sep_button = 100
+sep_top_button = 140
+sep_button = 140
 button_hight = 70
 
 buttons = [
