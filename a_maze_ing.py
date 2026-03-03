@@ -16,8 +16,8 @@ def main():
                 data = config_validation.validation(content)
                 print(data)
                 maze = Maze(data)
-                maze.my_42()
                 maze_draw(maze)
+                maze.output_maze()
         except (FileNotFoundError, config_validation.ErrorInConfigFile) as e:
             print(e)
 

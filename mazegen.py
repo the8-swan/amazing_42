@@ -1,6 +1,7 @@
 from collections import deque
 import random
 from config_validation import ErrorInConfigFile
+import os
 
 
 class Maze:
@@ -16,11 +17,14 @@ class Maze:
         self.height = data["HEIGHT"]
         self.entry = data["ENTRY"]
         self.exit = data["EXIT"]
+        self.out_file = data["OUTPUT_FILE"]
         self.cell_size = self.calc_cell_size()
         self.wall_size = self.celc_wall_size()
         self.path = []
         self.is_path_draw = False
         self.dirs = []
+        self.fourty_two = []
+        self.draw_42 = True
         self.seed = data["SEED"] if data["SEED"] else None
         # cells[row][col]
         self.cells = self.create_cells(self.width, self.height)
@@ -61,29 +65,43 @@ class Maze:
         return cell_size
 
     def my_42(self):
-        cells = 1
-        if self.cell_size <= 10:
-            cells = 6
-        w = int(self.width / 2)
-        h = int(self.height / 2)
-        start = 1 if int(cells / 2) == 0 else int(cells / 2)
-        for i in range(start, 4 * cells):
-            for j in range(cells):
-                self.cells[h + j][w + i].is_visited = True
-                self.cells[h + j][w - i].is_visited = True
-                self.cells[h - (3 * cells) + j][w + i].is_visited = True
-                self.cells[h + (3 * cells) + j][w + i].is_visited = True
+        if self.width > 15 and self.height > 15 :
+            cells = max(1, 20 // self.cell_size)
+            middle_w = int(self.width /2)
+            middle_h = int(self.height /2)
+            start = max(1, cells // 4)
+            for i in range(start , cells*4):
+                for j in range(cells):
+                    self.cells[middle_h+j][middle_w - i].is_visited = True
+                    self.cells[middle_h +j][middle_w + i].is_visited = True
+                    self.cells[middle_h- (3 * cells) + j][middle_w + i].is_visited = True
+                    self.cells[middle_h + (3 * cells) + j][middle_w + i].is_visited = True
+                    self.fourty_two.append(self.cells[middle_h+j][middle_w - i])
+                    self.fourty_two.append(self.cells[middle_h +j][middle_w + i])
+                    self.fourty_two.append(self.cells[middle_h- (3 * cells) + j][middle_w + i])
+                    self.fourty_two.append(self.cells[middle_h + (3 * cells) + j][middle_w + i])
+            
+            for i in range(0, 4 * cells):
+                for j in range(1, cells + 1):
+                    self.cells[middle_h + i][middle_w + j].is_visited = True
+                    self.cells[middle_h][middle_w - j].is_visited = True
+                    self.cells[middle_h - (3 * cells) + i][middle_w + (3 * cells) + j].is_visited = True
+                    self.cells[middle_h - (3 * cells) + i][middle_w - (3 * cells) - j].is_visited = True
+                    self.fourty_two.append(self.cells[middle_h + i][middle_w + j])
+                    self.fourty_two.append(self.cells[middle_h][middle_w - j])
+                    self.fourty_two.append(self.cells[middle_h - (3 * cells) + i][middle_w + (3 * cells) + j])
+                    self.fourty_two.append(self.cells[middle_h - (3 * cells) + i][middle_w - (3 * cells) - j])
 
-        for i in range(0, 4 * cells):
-            for j in range(1, cells + 1):
-                self.cells[h + i][w + j].is_visited = True
-                self.cells[h + i][w - j].is_visited = True
-                self.cells[h - (3 * cells) + i][w + (3 * cells) + j].is_visited = True
-                self.cells[h - (3 * cells) + i][w - (3 * cells) - j].is_visited = True
+            for i in range(0, 4 * cells):
+                for j in range(1, 1 + cells):
+                    self.cells[middle_h + i][middle_w - j].is_visited = True
+                    self.fourty_two.append(self.cells[middle_h - i][middle_w - j])
+        else:
+            print("42 will not be drawn !!")
 
-        for i in range(cells):
-            for j in range(1, 1 + cells):
-                self.cells[h - i][w - j].is_visited = True
+
+
+
 
     def dsf_algorith(self, x, y):
         """Iterative depth-first search to avoid recursion limit."""
@@ -258,4 +276,28 @@ class Maze:
                 if (lx, ly) in unvisited:
                     unvisited.remove((lx, ly))
 
+    def output_maze(self):
+        os.makedirs("output", exist_ok=True)
+        with open("output/" + self.out_file, 'w') as f:
+            for i in range(len(self.cells)):
+                for j in range(len(self.cells[0])):
+                    count = 0
+                    if self.cells[i][j].walls['N']:
+                        count += 1
+                    if self.cells[i][j].walls['S']:
+                        count += 4
+                    if self.cells[i][j].walls['E']:
+                        count += 2
+                    if self.cells[i][j].walls['W']:
+                        count += 8
+                    h = format(count, "X")
+                    f.write(h)
+                f.write("\n")
+            f.write("\n")
+            x, y = self.entry
+            m_x, m_y = self.exit
+            f.write(f"{x},{y}\n")
+            f.write(f"{m_x},{m_y}\n")
+            for x in self.dirs:
+                f.write(x)    
  

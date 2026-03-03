@@ -88,6 +88,8 @@ def data_validation(data_dict: dict):
     ):
         raise ErrorInConfigFile("EXIT and ENTRY coordinates should be " "different")
 
+    if data_dict["OUTPUT_FILE"].strip() == '':
+            raise ErrorInConfigFile("OUTPUT_FILE is empty !!")
 
 def validation(text: str):
     mandatory = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]

@@ -1,8 +1,8 @@
-    WIDTH       = 100
-HEIGHT= 100
+    WIDTH       = 50
+HEIGHT= 50
 #helloo
-ENTRY=9,9     
-    EXIT    =   12,19
-OUTPUT_FILE=maze.txt
+ENTRY=9,9   
+    EXIT    =   22,25
+OUTPUT_FILE = output.txt
 PERFECT  = True  
 SEED = ########

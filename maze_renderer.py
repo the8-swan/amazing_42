@@ -1,6 +1,7 @@
 import mlx
 import dimentions
 import random
+import sys
 
 
 class img_data:
@@ -389,13 +390,26 @@ class MazeApp:
 
 
 
+def check_entry_exit(maze):
+    x_entry,y_entry = maze.entry
+    x_exit,y_exit = maze.exit
+    entry = [True for t in maze.fourty_two if t.row == x_entry and t.column == y_entry]
+    exit = [True for t in maze.fourty_two if t.row == x_exit and t.column == y_exit]
+    if entry.__len__() != 0 :
+        print(f"{(x_entry,y_entry)} in the 42 !!")
+        return 0
 
-
+    if exit.__len__() != 0:
+        print(f"{(x_exit,y_exit)} in the 42 !!")
+        return 0
+    return 1
 
 def maze_draw(maze):
-    mazeApp = MazeApp(maze)
-    mazeApp.maze.dsf_algorith(0, 0)
-    mazeApp.mlx_ptr.mlx_hook(mazeApp.win, 33, 0, mazeApp.destroy_win, None)
-    mazeApp.mlx_ptr.mlx_loop_hook(mazeApp.mlx, mazeApp.upade_image_maze, None)
-    mazeApp.mlx_ptr.mlx_mouse_hook(mazeApp.win, mazeApp.clicked_button, None)
-    mazeApp.mlx_ptr.mlx_loop(mazeApp.mlx)
+    maze.my_42()
+    if check_entry_exit(maze):
+        mazeApp = MazeApp(maze)
+        mazeApp.maze.dsf_algorith(0, 0)
+        mazeApp.mlx_ptr.mlx_hook(mazeApp.win, 33, 0, mazeApp.destroy_win, None)
+        mazeApp.mlx_ptr.mlx_loop_hook(mazeApp.mlx, mazeApp.upade_image_maze, None)
+        mazeApp.mlx_ptr.mlx_mouse_hook(mazeApp.win, mazeApp.clicked_button, None)
+        mazeApp.mlx_ptr.mlx_loop(mazeApp.mlx)
