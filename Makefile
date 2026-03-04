@@ -17,4 +17,4 @@ clean:
 	rm -rf .mypy_cache
 
 lint:
-	flake8
+	flake8 .

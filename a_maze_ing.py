@@ -4,7 +4,7 @@ from mazegen import Maze
 from maze_renderer import maze_draw
 
 
-def main():
+def main() -> None:
     args = sys.argv[1:]
     if args.__len__() > 1:
         print("Too many files , make sure to enter one file !!")

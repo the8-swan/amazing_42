@@ -1,12 +1,12 @@
 class ErrorInConfigFile(Exception):
-    def __init__(self, message):
+    def __init__(self, message: str) -> None:
         self.message = message
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Error in your configuration file: {self.message}"
 
 
-def data_validation(data_dict: dict):
+def data_validation(data_dict: dict) -> None:
     # PERFECT validation
     if data_dict["PERFECT"].upper() not in ("TRUE", "FALSE"):
         raise ErrorInConfigFile("'PERFECT' value should be TRUE or FALSE")
@@ -100,7 +100,7 @@ def data_validation(data_dict: dict):
         raise ErrorInConfigFile("OUTPUT_FILE is empty !!")
 
 
-def validation(text: str):
+def validation(text: str) -> dict:
     mandatory = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]
     valid_keys = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT",
                   "SEED"]
