@@ -1,7 +1,6 @@
 import mlx
 import dimentions
 import random
-import sys
 
 
 class img_data:
@@ -36,6 +35,7 @@ class img_data:
                 (color >> 24) & 0xFF if (color >> 24) else 0xFF
             )  # Alpha
 
+
 class MazeApp:
     def __init__(self, maze):
         self.mlx_ptr = mlx.Mlx()
@@ -47,11 +47,12 @@ class MazeApp:
         self.is_animating = True
         self.color = dimentions.colors[2]["base_wall_color"]
 
-        #the actual MLX image object Required by (mlx_put_image_to_window,redraw it later,to destroy it)
+        # the actual MLX image object Required by (mlx_put_image_to_window,
+        # redraw it later,to destroy it)
         self.maze_obj = None
         self.button_obj = None
 
-        #memory 
+        # memory
         self.maze_addr = None
         self.button_addr = None
 
@@ -61,24 +62,43 @@ class MazeApp:
 
     def mlx_init(self):
         self.mlx = self.mlx_ptr.mlx_init()
-        self.win = self.mlx_ptr. mlx_new_window(self.mlx, dimentions.window_x, dimentions.window_y, "A_MAZE_ING")
-    
+        self.win = self.mlx_ptr.mlx_new_window(
+            self.mlx, dimentions.window_x, dimentions.window_y, "A_MAZE_ING"
+        )
+
     def create_maze_img(self):
-        self.maze_obj = self.mlx_ptr.mlx_new_image(self.mlx, dimentions.image_maze_x, dimentions.image_maze_y)
-        addr, bpp, size_line, endian = self.mlx_ptr.mlx_get_data_addr(self.maze_obj)
+        self.maze_obj = self.mlx_ptr.mlx_new_image(
+            self.mlx, dimentions.image_maze_x, dimentions.image_maze_y
+        )
+        addr, bpp, size_line, endian = self.mlx_ptr.mlx_get_data_addr(
+                    self.maze_obj)
         img = img_data(addr, bpp, size_line, endian)
         self.maze_addr = img
-        self.maze_addr.set_color_to_image(dimentions.image_maze_y, dimentions.image_maze_x, dimentions.colors[0]["background"])
-        self.mlx_ptr.mlx_put_image_to_window(self.mlx, self.win, self.maze_obj, 0, 0)
+        self.maze_addr.set_color_to_image(
+            dimentions.image_maze_y,
+            dimentions.image_maze_x,
+            dimentions.colors[0]["background"],
+        )
+        self.mlx_ptr.mlx_put_image_to_window(
+            self.mlx, self.win, self.maze_obj, 0, 0)
 
     def create_button_img(self):
-        self.button_obj = self.mlx_ptr.mlx_new_image(self.mlx, dimentions.image_button_x, dimentions.image_button_y)
-        addr, bpp, size_line, endian = self.mlx_ptr.mlx_get_data_addr(self.button_obj)
+        self.button_obj = self.mlx_ptr.mlx_new_image(
+            self.mlx, dimentions.image_button_x, dimentions.image_button_y
+        )
+        addr, bpp, size_line, endian = self.mlx_ptr.mlx_get_data_addr(
+            self.button_obj)
         img = img_data(addr, bpp, size_line, endian)
         self.button_addr = img
-        self.button_addr.set_color_to_image(dimentions.image_button_y, dimentions.image_button_x, dimentions.colors[0]["background"])
+        self.button_addr.set_color_to_image(
+            dimentions.image_button_y,
+            dimentions.image_button_x,
+            dimentions.colors[0]["background"],
+        )
         self.button_draw()
-        self.mlx_ptr.mlx_put_image_to_window(self.mlx, self.win, self.button_obj, dimentions.image_maze_x, 0)
+        self.mlx_ptr.mlx_put_image_to_window(
+            self.mlx, self.win, self.button_obj, dimentions.image_maze_x, 0
+        )
 
     def button_draw(self):
         start = dimentions.sep_top_button
@@ -122,24 +142,35 @@ class MazeApp:
             dimentions.buttons[i]["start_y"] = start
             dimentions.buttons[i]["end_y"] = start + dimentions.button_hight
             for y in range(start, start + dimentions.button_hight):
-                for x in range(dimentions.buttons[i]["start_x"], dimentions.buttons[i]["end_x"]):
-                    self.button_addr.put_pixel_fast(x, y, dimentions.colors[1]["button_bg"])
-            draw_text(dimentions.buttons[i]["text"],start)
+                for x in range(
+                    dimentions.buttons[i]["start_x"],
+                    dimentions.buttons[i]["end_x"]
+                ):
+                    self.button_addr.put_pixel_fast(
+                        x, y, dimentions.colors[1]["button_bg"]
+                    )
+            draw_text(dimentions.buttons[i]["text"], start)
             start += dimentions.sep_button
-            i+=1
+            i += 1
 
     def destroy_win(self, param):
         self.mlx_ptr.mlx_destroy_window(self.mlx, self.win)
         self.mlx_ptr.mlx_loop_exit(self.mlx)
-    
+
     def upade_image_maze(self, param):
         if self.is_animating is False:
             return 0
-        startx = int((dimentions.image_maze_x - (self.maze.width * self.maze.cell_size)) / 2)
-        starty = int((dimentions.image_maze_y - (self.maze.height * self.maze.cell_size)) / 2)
-    
+        startx = int(
+            (dimentions.image_maze_x -
+             (self.maze.width * self.maze.cell_size)) / 2
+        )
+        starty = int(
+            (dimentions.image_maze_y -
+             (self.maze.height * self.maze.cell_size)) / 2
+        )
+
         entryx, entryy = self.maze.entry
-        exitx, exity = self.maze.exit     
+        exitx, exity = self.maze.exit
 
         if self.currenty <= self.maze.height:
             for y in range(
@@ -152,11 +183,13 @@ class MazeApp:
                     if self.maze.cells[yn][x].walls["N"] is True:
                         for i in range(
                             startx + (x * self.maze.cell_size),
-                            startx + (x * self.maze.cell_size) + self.maze.cell_size,
+                            startx + (x * self.maze.cell_size) +
+                            self.maze.cell_size
                         ):
                             for j in range(self.maze.wall_size):
-                                self.maze_addr.put_pixel_fast(i, y + j, self.color)
-        
+                                self.maze_addr.put_pixel_fast(
+                                    i, y + j, self.color)
+
         if self.currentx <= self.maze.width:
             for x in range(
                 startx,
@@ -168,23 +201,28 @@ class MazeApp:
                     if self.maze.cells[y][xn].walls["W"] is True:
                         for i in range(
                             starty + (y * self.maze.cell_size),
-                            (y * self.maze.cell_size) + starty + self.maze.cell_size,
+                            (y * self.maze.cell_size) + starty +
+                            self.maze.cell_size
                         ):
                             for j in range(self.maze.wall_size):
-                                self.maze_addr.put_pixel_fast(x + j, i, self.color)
+                                self.maze_addr.put_pixel_fast(
+                                    x + j, i, self.color)
 
-        if self.currentx >= self.maze.width and self.currenty >= self.maze.height:
+        if (self.currentx >= self.maze.width and
+                self.currenty >= self.maze.height):
             for y in range(0, self.maze.height):
                 if self.maze.cells[y][self.maze.width - 1].walls["E"] is True:
                     for i in range(
                         starty + (y * self.maze.cell_size),
-                        (y * self.maze.cell_size) + starty + self.maze.cell_size,
+                        (y * self.maze.cell_size) + starty +
+                        self.maze.cell_size
                     ):
                         for j in range(self.maze.wall_size):
                             self.maze_addr.put_pixel_fast(
-                                startx + (self.maze.width * self.maze.cell_size) + j,
+                                startx +
+                                (self.maze.width * self.maze.cell_size) + j,
                                 i,
-                                self.color,
+                                self.color
                             )
             for x in range(0, self.maze.width):
                 for i in range(
@@ -194,10 +232,11 @@ class MazeApp:
                     for j in range(self.maze.wall_size):
                         self.maze_addr.put_pixel_fast(
                             i,
-                            starty + (self.maze.height * self.maze.cell_size) + j,
+                            starty + (self.maze.height * self.maze.cell_size)
+                            + j,
                             self.color,
                         )
-            #draw entry and exit point
+            # draw entry and exit point
             for eny in range(
                 starty + (entryy * self.maze.cell_size),
                 starty + ((entryy + 1) * self.maze.cell_size),
@@ -206,7 +245,9 @@ class MazeApp:
                     startx + (entryx * self.maze.cell_size),
                     startx + ((entryx + 1) * self.maze.cell_size),
                 ):
-                    self.maze_addr.put_pixel_fast(enx, eny, dimentions.colors[4]["entry"])
+                    self.maze_addr.put_pixel_fast(
+                        enx, eny, dimentions.colors[4]["entry"]
+                    )
             for eny in range(
                 starty + (exity * self.maze.cell_size),
                 starty + ((exity + 1) * self.maze.cell_size),
@@ -215,12 +256,14 @@ class MazeApp:
                     startx + (exitx * self.maze.cell_size),
                     startx + ((exitx + 1) * self.maze.cell_size),
                 ):
-                    self.maze_addr.put_pixel_fast(enx, eny, dimentions.colors[5]["exit"])
+                    self.maze_addr.put_pixel_fast(
+                        enx, eny, dimentions.colors[5]["exit"]
+                    )
             self.maze.bfs_algo()
             self.path_draw()
             self.is_animating = False
         self.mlx_ptr.mlx_put_image_to_window(
-        self.mlx, self.win, self.maze_obj, 0, 0)
+            self.mlx, self.win, self.maze_obj, 0, 0)
 
         if self.currentx < self.maze.width:
             self.currentx += 1
@@ -229,8 +272,14 @@ class MazeApp:
 
     def path_draw(self):
         self.maze.is_path_draw = True
-        startx = int((dimentions.image_maze_x - (self.maze.width * self.maze.cell_size)) / 2)
-        starty = int((dimentions.image_maze_y - (self.maze.height * self.maze.cell_size)) / 2)
+        startx = int(
+            (dimentions.image_maze_x -
+             (self.maze.width * self.maze.cell_size)) / 2
+        )
+        starty = int(
+            (dimentions.image_maze_y -
+             (self.maze.height * self.maze.cell_size)) / 2
+        )
         border = self.maze.wall_size * 2 if self.maze.cell_size > 6 else 1
         color = dimentions.colors[6]["path_color"]
         for data in self.maze.path:
@@ -240,28 +289,34 @@ class MazeApp:
             cell_top = starty + (y * self.maze.cell_size) + border
             cell_right = startx + ((x + 1) * self.maze.cell_size) - border
             cell_bottom = starty + ((y + 1) * self.maze.cell_size) - border
-            
+
             for py in range(cell_top, cell_bottom):
                 for px in range(cell_left, cell_right):
                     self.maze_addr.put_pixel_fast(px, py, color)
         self.mlx_ptr.mlx_put_image_to_window(
-            self.mlx, self.win, self.maze_obj, 0, 0
-        )
-    
+            self.mlx, self.win, self.maze_obj, 0, 0)
+
     def clear_image(self):
         width = int((800 - (self.maze.width * self.maze.cell_size)) / 2)
         height = int((800 - (self.maze.height * self.maze.cell_size)) / 2)
-        for i in range(height+(self.maze.cell_size * self.maze.height)):
-            for j in range(width+(self.maze.cell_size * self.maze.width)):
-                self.maze_addr.put_pixel_fast(j, i, dimentions.colors[0]["background"])
-       
+        for i in range(height + (self.maze.cell_size * self.maze.height)):
+            for j in range(width + (self.maze.cell_size * self.maze.width)):
+                self.maze_addr.put_pixel_fast(
+                    j, i, dimentions.colors[0]["background"])
+
     def draw_maze_without_animation(self):
         self.clear_image()
-        startx = int((dimentions.image_maze_x - (self.maze.width * self.maze.cell_size)) / 2)
-        starty = int((dimentions.image_maze_y - (self.maze.height * self.maze.cell_size)) / 2)
-    
+        startx = int(
+            (dimentions.image_maze_x -
+             (self.maze.width * self.maze.cell_size)) / 2
+        )
+        starty = int(
+            (dimentions.image_maze_y -
+             (self.maze.height * self.maze.cell_size)) / 2
+        )
+
         entryx, entryy = self.maze.entry
-        exitx, exity = self.maze.exit     
+        exitx, exity = self.maze.exit
 
         for y in range(
             starty,
@@ -273,11 +328,12 @@ class MazeApp:
                 if self.maze.cells[yn][x].walls["N"] is True:
                     for i in range(
                         startx + (x * self.maze.cell_size),
-                        startx + (x * self.maze.cell_size) + self.maze.cell_size,
+                        startx + (x * self.maze.cell_size) +
+                        self.maze.cell_size
                     ):
                         for j in range(self.maze.wall_size):
                             self.maze_addr.put_pixel_fast(i, y + j, self.color)
-        
+
         for x in range(
             startx,
             (self.maze.width * self.maze.cell_size) + startx,
@@ -288,7 +344,8 @@ class MazeApp:
                 if self.maze.cells[y][xn].walls["W"] is True:
                     for i in range(
                         starty + (y * self.maze.cell_size),
-                        (y * self.maze.cell_size) + starty + self.maze.cell_size,
+                        (y * self.maze.cell_size) + starty +
+                        self.maze.cell_size
                     ):
                         for j in range(self.maze.wall_size):
                             self.maze_addr.put_pixel_fast(x + j, i, self.color)
@@ -301,7 +358,8 @@ class MazeApp:
                 ):
                     for j in range(self.maze.wall_size):
                         self.maze_addr.put_pixel_fast(
-                            startx + (self.maze.width * self.maze.cell_size) + j,
+                            startx +
+                            (self.maze.width * self.maze.cell_size) + j,
                             i,
                             self.color,
                         )
@@ -316,7 +374,7 @@ class MazeApp:
                         starty + (self.maze.height * self.maze.cell_size) + j,
                         self.color,
                     )
-            #draw entry and exit point
+            # draw entry and exit point
         for eny in range(
             starty + (entryy * self.maze.cell_size),
             starty + ((entryy + 1) * self.maze.cell_size),
@@ -325,7 +383,8 @@ class MazeApp:
                 startx + (entryx * self.maze.cell_size),
                 startx + ((entryx + 1) * self.maze.cell_size),
             ):
-                self.maze_addr.put_pixel_fast(enx, eny, dimentions.colors[4]["entry"])
+                self.maze_addr.put_pixel_fast(enx, eny,
+                                              dimentions.colors[4]["entry"])
         for eny in range(
             starty + (exity * self.maze.cell_size),
             starty + ((exity + 1) * self.maze.cell_size),
@@ -334,31 +393,42 @@ class MazeApp:
                 startx + (exitx * self.maze.cell_size),
                 startx + ((exitx + 1) * self.maze.cell_size),
             ):
-                self.maze_addr.put_pixel_fast(enx, eny, dimentions.colors[5]["exit"])
-        self.mlx_ptr.mlx_put_image_to_window(
-        self.mlx, self.win, self.maze_obj, 0, 0)
-
+                self.maze_addr.put_pixel_fast(enx, eny,
+                                              dimentions.colors[5]["exit"])
+        self.mlx_ptr.mlx_put_image_to_window(self.mlx,
+                                             self.win, self.maze_obj, 0, 0)
 
     def clicked_button(self, button: int, x: int, y: int, data: any):
         i = 0
         while i < 4:
-            if x >= dimentions.buttons[i]["start_x"] and x <= dimentions.buttons[i]["end_x"]:
-                if y >= dimentions.buttons[i]["start_y"] and y <= dimentions.buttons[i]["end_y"]:
+            if (
+                x >= dimentions.buttons[i]["start_x"]
+                and x <= dimentions.buttons[i]["end_x"]
+            ):
+                if (
+                    y >= dimentions.buttons[i]["start_y"]
+                    and y <= dimentions.buttons[i]["end_y"]
+                ):
                     if dimentions.buttons[i]["text"] == "regenerate maze":
-                        self.maze_addr.set_color_to_image(800, 800, dimentions.colors[0]["background"])
+                        self.maze_addr.set_color_to_image(
+                            800, 800, dimentions.colors[0]["background"]
+                        )
                         self.maze.reset_maze()
                         self.maze.my_42()
                         if self.maze.algo == "wilson":
                             self.maze.wilson_algo()
                         else:
-                            self.maze.dsf_algorith(0,0)
+                            self.maze.dsf_algorith()
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
                         break
                     elif dimentions.buttons[i]["text"] == "change color":
-                        self.maze_addr.set_color_to_image(800, 800, dimentions.colors[0]["background"])
-                        self.color = random.choice(dimentions.colors[3]["wall_colors"])
+                        self.maze_addr.set_color_to_image(
+                            800, 800, dimentions.colors[0]["background"]
+                        )
+                        self.color = random.choice(
+                            dimentions.colors[3]["wall_colors"])
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
@@ -371,7 +441,9 @@ class MazeApp:
                             self.path_draw()
                             self.maze.is_path_draw = True
                     elif dimentions.buttons[i]["text"] == "change algorithm":
-                        self.maze_addr.set_color_to_image(800, 800, dimentions.colors[0]["background"])
+                        self.maze_addr.set_color_to_image(
+                            800, 800, dimentions.colors[0]["background"]
+                        )
                         self.maze.reset_maze()
                         self.maze.my_42()
                         if self.maze.algo == "dfs":
@@ -379,23 +451,23 @@ class MazeApp:
                             self.maze.wilson_algo()
                         else:
                             self.maze.algo = "dfs"
-                            self.maze.dsf_algorith(0, 0)
+                            self.maze.dsf_algorith()
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
                         break
 
-
             i += 1
 
 
-
 def check_entry_exit(maze):
-    x_entry,y_entry = maze.entry
-    x_exit,y_exit = maze.exit
-    entry = [True for t in maze.fourty_two if t.row == x_entry and t.column == y_entry]
-    exit = [True for t in maze.fourty_two if t.row == x_exit and t.column == y_exit]
-    if entry.__len__() != 0 :
+    x_entry, y_entry = maze.entry
+    x_exit, y_exit = maze.exit
+    entry = [True for t in maze.fourty_two
+             if t.row == x_entry and t.column == y_entry]
+    exit = [True for t in maze.fourty_two
+            if t.row == x_exit and t.column == y_exit]
+    if entry.__len__() != 0:
         print(f"{(x_entry,y_entry)} in the 42 !!")
         return 0
 
@@ -404,12 +476,18 @@ def check_entry_exit(maze):
         return 0
     return 1
 
+
 def maze_draw(maze):
     maze.my_42()
     if check_entry_exit(maze):
         mazeApp = MazeApp(maze)
-        mazeApp.maze.dsf_algorith(0, 0)
-        mazeApp.mlx_ptr.mlx_hook(mazeApp.win, 33, 0, mazeApp.destroy_win, None)
-        mazeApp.mlx_ptr.mlx_loop_hook(mazeApp.mlx, mazeApp.upade_image_maze, None)
-        mazeApp.mlx_ptr.mlx_mouse_hook(mazeApp.win, mazeApp.clicked_button, None)
+        mazeApp.maze.dsf_algorith()
+        mazeApp.maze.not_perfect()
+        mazeApp.mlx_ptr.mlx_hook(
+            mazeApp.win, 33, 0, mazeApp.destroy_win, None)
+        mazeApp.mlx_ptr.mlx_loop_hook(
+            mazeApp.mlx, mazeApp.upade_image_maze, None)
+        mazeApp.mlx_ptr.mlx_mouse_hook(
+            mazeApp.win, mazeApp.clicked_button, None)
         mazeApp.mlx_ptr.mlx_loop(mazeApp.mlx)
+    return check_entry_exit(maze)

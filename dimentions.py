@@ -52,7 +52,7 @@ colors = [
             0xFF6600,  # 10. Bright orange (sunset)
         ]
     },
-    {"entry": 0xFB542B },
+    {"entry": 0xFB542B},
     {"exit": 0x0000FF},
     {"path_color": 0xFFFFFF},
 ]

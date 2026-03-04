@@ -3,6 +3,7 @@ import config_validation
 from mazegen import Maze
 from maze_renderer import maze_draw
 
+
 def main():
     args = sys.argv[1:]
     if args.__len__() > 1:
@@ -14,10 +15,9 @@ def main():
             with open(sys.argv[1], "r") as file:
                 content = file.read()
                 data = config_validation.validation(content)
-                print(data)
                 maze = Maze(data)
-                maze_draw(maze)
-                maze.output_maze()
+                if maze_draw(maze):
+                    maze.output_maze()
         except (FileNotFoundError, config_validation.ErrorInConfigFile) as e:
             print(e)
 
