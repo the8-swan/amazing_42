@@ -1,6 +1,6 @@
 import sys
 import config_validation
-from mazegen import Maze
+from mazegen.mazegen import Maze
 from maze_renderer import maze_draw
 
 

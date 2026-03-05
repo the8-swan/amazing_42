@@ -18,7 +18,7 @@ By default we're using dfs algorithm to generate the maze, and then the user can
 
 ### the roles of each member team :
 
-_ikkaboud_ : was responsible of implementing the algorithm of dfs, bfs and wilson , and also she handeled the perfect / unperfect maze , and output file generation .
+_ikkaboud_ : was responsible of implementing the algorithms : dfs, bfs and wilson , and also she handeled the perfect / unperfect maze , and output file generation .
 
 _obakri_ : was responsible of the graphical interface using minilibx , also config file parsing and generating makefile and this readme file
 

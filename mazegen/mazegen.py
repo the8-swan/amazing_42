@@ -12,6 +12,7 @@ class Maze:
         "W": (-1, 0, "W", "E"),
         "E": (+1, 0, "E", "W"),
     }
+    seed: Optional[str]
 
     def __init__(self, data: dict[str, Any]) -> None:
         """Initialize the maze with dimensions, entry/exit points,
@@ -30,7 +31,8 @@ class Maze:
         self.dirs: List[str] = []
         self.fourty_two: List["Maze.Cell"] = []
         self.draw_42: bool = True
-        self.seed: Optional[int] = data["SEED"] if data["SEED"] else None
+        self.seed = data["SEED"] if ("SEED" in data.keys()) else None
+
         # cells[row][col]
         self.cells: List[List["Maze.Cell"]] = self.create_cells(self.width,
                                                                 self.height)
@@ -336,14 +338,6 @@ class Maze:
                     self.cells[y][x].is_visited = True
                     if (x, y) in unvisited:
                         unvisited.remove((x, y))
-
-            l_x: int
-            l_y: int
-            l_x, l_y = path[0]
-            if not self.cells[l_y][l_x].is_visited:
-                self.cells[l_y][l_x].is_visited = True
-                if (l_x, l_y) in unvisited:
-                    unvisited.remove((l_x, l_y))
 
     def bfs_algo(self) -> None:
         """Find the shortest path from entry to exit

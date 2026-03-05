@@ -2,7 +2,8 @@ import mlx
 import dimentions
 import random
 from typing import Any, cast
-from mazegen import Maze
+from mazegen.mazegen import Maze
+import time
 
 
 class img_data:
@@ -191,6 +192,8 @@ class MazeApp:
         then render the path once complete."""
         if self.is_animating is False:
             return 0
+        if self.maze.width <= 40 and self.maze.height <= 40:
+            time.sleep(0.02)
         startx = int(
             (dimentions.image_maze_x -
              (self.maze.width * self.maze.cell_size)) / 2
@@ -456,6 +459,7 @@ class MazeApp:
                             self.maze.wilson_algo()
                         else:
                             self.maze.dsf_algorith()
+                        self.maze.not_perfect()
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
@@ -489,11 +493,11 @@ class MazeApp:
                         else:
                             self.maze.algo = "dfs"
                             self.maze.dsf_algorith()
+                        self.maze.not_perfect()
                         self.currentx = 0
                         self.currenty = 0
                         self.is_animating = True
                         break
-
             i += 1
 
 
@@ -507,10 +511,10 @@ def check_entry_exit(maze: Maze) -> int:
     exit = [True for t in maze.fourty_two
             if t.row == x_exit and t.column == y_exit]
     if entry.__len__() != 0:
-        print(f"entry point is in the 42 !!")
+        print("entry point is in the 42 !!")
         return 0
     elif exit.__len__() != 0:
-        print(f"exit point is in the 42 !!")
+        print("exit point is in the 42 !!")
         return 0
     return 1
 

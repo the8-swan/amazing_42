@@ -1,8 +1,7 @@
-    WIDTH       = 20
-HEIGHT= 20
+    WIDTH       = 70
+HEIGHT= 70
 #helloo
-ENTRY=9,9  
-    EXIT    =   19,19
+ENTRY=0,4  
+    EXIT    =   19,69
 OUTPUT_FILE = output.txt
-PERFECT  = False  
-SEED = ########
+PERFECT  = False 

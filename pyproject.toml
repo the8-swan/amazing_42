@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "mazegen"
+version = "1.0.0"
+description = "a_maze_ing is a project that aims to create an interactive maze and pathfinding visualization tool built from scratch using python programming language and minilibx library ."
+authors = ["ikkaboud", "obakri"]
+
+
+packages = [
+    { include = "mazegen" },
+]
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
