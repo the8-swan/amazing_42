@@ -1,22 +1,25 @@
 import mlx
 import dimentions
 import random
+from typing import Any
+from mazegen import Maze
 
 
 class img_data:
-    def __init__(self, addr, bits_per_pixel, size_line, endian):
+    def __init__(self, addr: bytearray, bits_per_pixel: int, size_line: int,
+                  endian: int) -> None:
         self.addr = addr
         self.bits_per_pixel = bits_per_pixel
         self.size_line = size_line
         self.endian = endian
 
-    def set_color_to_image(self, height, width, color: int):
+    def set_color_to_image(self, height: int, width: int, color: int) -> None:
         """Fill entire image with a solid color."""
         for y in range(height):
             for x in range(width):
                 self.put_pixel_fast(x, y, color)
 
-    def put_pixel_fast(self, x: int, y: int, color: int):
+    def put_pixel_fast(self, x: int, y: int, color: int) -> None:
         """Set a single pixel color."""
         bytes_per_pixel = self.bits_per_pixel // 8
 
@@ -37,7 +40,7 @@ class img_data:
 
 
 class MazeApp:
-    def __init__(self, maze):
+    def __init__(self, maze: Maze) -> None:
         self.mlx_ptr = mlx.Mlx()
         self.mlx = None
         self.win = None
@@ -60,13 +63,13 @@ class MazeApp:
         self.create_maze_img()
         self.create_button_img()
 
-    def mlx_init(self):
+    def mlx_init(self) -> None:
         self.mlx = self.mlx_ptr.mlx_init()
         self.win = self.mlx_ptr.mlx_new_window(
             self.mlx, dimentions.window_x, dimentions.window_y, "A_MAZE_ING"
         )
 
-    def create_maze_img(self):
+    def create_maze_img(self) -> None:
         self.maze_obj = self.mlx_ptr.mlx_new_image(
             self.mlx, dimentions.image_maze_x, dimentions.image_maze_y
         )
@@ -82,7 +85,7 @@ class MazeApp:
         self.mlx_ptr.mlx_put_image_to_window(
             self.mlx, self.win, self.maze_obj, 0, 0)
 
-    def create_button_img(self):
+    def create_button_img(self) -> None:
         self.button_obj = self.mlx_ptr.mlx_new_image(
             self.mlx, dimentions.image_button_x, dimentions.image_button_y
         )
@@ -100,11 +103,11 @@ class MazeApp:
             self.mlx, self.win, self.button_obj, dimentions.image_maze_x, 0
         )
 
-    def button_draw(self):
+    def button_draw(self) -> None:
         start = dimentions.sep_top_button
         i = 0
 
-        def draw_text(text, button_top):
+        def draw_text(text: str, button_top: int) -> None:
             text = text.upper()
 
             scale = 2
@@ -153,11 +156,11 @@ class MazeApp:
             start += dimentions.sep_button
             i += 1
 
-    def destroy_win(self, param):
+    def destroy_win(self, param: Any) -> None:
         self.mlx_ptr.mlx_destroy_window(self.mlx, self.win)
         self.mlx_ptr.mlx_loop_exit(self.mlx)
 
-    def upade_image_maze(self, param):
+    def upade_image_maze(self, param: Any) -> int:
         if self.is_animating is False:
             return 0
         startx = int(
@@ -270,7 +273,7 @@ class MazeApp:
         if self.currenty < self.maze.height:
             self.currenty += 1
 
-    def path_draw(self):
+    def path_draw(self) -> None:
         self.maze.is_path_draw = True
         startx = int(
             (dimentions.image_maze_x -
@@ -296,7 +299,7 @@ class MazeApp:
         self.mlx_ptr.mlx_put_image_to_window(
             self.mlx, self.win, self.maze_obj, 0, 0)
 
-    def clear_image(self):
+    def clear_image(self) -> None:
         width = int((800 - (self.maze.width * self.maze.cell_size)) / 2)
         height = int((800 - (self.maze.height * self.maze.cell_size)) / 2)
         for i in range(height + (self.maze.cell_size * self.maze.height)):
@@ -304,7 +307,7 @@ class MazeApp:
                 self.maze_addr.put_pixel_fast(
                     j, i, dimentions.colors[0]["background"])
 
-    def draw_maze_without_animation(self):
+    def draw_maze_without_animation(self) -> None:
         self.clear_image()
         startx = int(
             (dimentions.image_maze_x -
@@ -398,7 +401,7 @@ class MazeApp:
         self.mlx_ptr.mlx_put_image_to_window(self.mlx,
                                              self.win, self.maze_obj, 0, 0)
 
-    def clicked_button(self, button: int, x: int, y: int, data: any):
+    def clicked_button(self, button: int, x: int, y: int, data: Any) -> None:
         i = 0
         while i < 4:
             if (
@@ -460,7 +463,7 @@ class MazeApp:
             i += 1
 
 
-def check_entry_exit(maze):
+def check_entry_exit(maze: Maze) -> int:
     x_entry, y_entry = maze.entry
     x_exit, y_exit = maze.exit
     entry = [True for t in maze.fourty_two
@@ -477,7 +480,7 @@ def check_entry_exit(maze):
     return 1
 
 
-def maze_draw(maze):
+def maze_draw(maze: Maze) -> int:
     maze.my_42()
     if check_entry_exit(maze):
         mazeApp = MazeApp(maze)
