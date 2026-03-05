@@ -507,11 +507,10 @@ def check_entry_exit(maze: Maze) -> int:
     exit = [True for t in maze.fourty_two
             if t.row == x_exit and t.column == y_exit]
     if entry.__len__() != 0:
-        print(f"{(x_entry,y_entry)} in the 42 !!")
+        print(f"entry point is in the 42 !!")
         return 0
-
-    if exit.__len__() != 0:
-        print(f"{(x_exit,y_exit)} in the 42 !!")
+    elif exit.__len__() != 0:
+        print(f"exit point is in the 42 !!")
         return 0
     return 1
 
@@ -530,4 +529,4 @@ def maze_draw(maze: Maze) -> int:
         mazeApp.mlx_ptr.mlx_mouse_hook(
             mazeApp.win, mazeApp.clicked_button, None)
         mazeApp.mlx_ptr.mlx_loop(mazeApp.mlx)
-    return check_entry_exit(maze)
+    return 0

@@ -35,6 +35,8 @@ class Maze:
         self.cells: List[List["Maze.Cell"]] = self.create_cells(self.width,
                                                                 self.height)
         self.algo: str = "dfs"
+        if self.seed is not None:
+            random.seed(self.seed)
 
     class Cell:
         def __init__(self, row: int, column: int) -> None:
