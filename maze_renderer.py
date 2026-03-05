@@ -1,26 +1,28 @@
 import mlx
 import dimentions
 import random
-from typing import Any
+from typing import Any, cast
 from mazegen import Maze
 
 
 class img_data:
     def __init__(self, addr: bytearray, bits_per_pixel: int, size_line: int,
-                  endian: int) -> None:
+                 endian: int) -> None:
+        """Initialize the image buffer with its memory
+        address and pixel format properties."""
         self.addr = addr
         self.bits_per_pixel = bits_per_pixel
         self.size_line = size_line
         self.endian = endian
 
     def set_color_to_image(self, height: int, width: int, color: int) -> None:
-        """Fill entire image with a solid color."""
+        """Fill entire image with a single solid color."""
         for y in range(height):
             for x in range(width):
                 self.put_pixel_fast(x, y, color)
 
     def put_pixel_fast(self, x: int, y: int, color: int) -> None:
-        """Set a single pixel color."""
+        """Set the color of a single pixel at the given coordinates."""
         bytes_per_pixel = self.bits_per_pixel // 8
 
         # Calculate byte offset in flat array
@@ -40,7 +42,23 @@ class img_data:
 
 
 class MazeApp:
+
+    mlx: Any
+    win: Any
+    maze_obj: Any
+    button_obj: Any
+    maze_addr: img_data
+    button_addr: img_data
+    color: int
+    currentx: int
+    currenty: int
+    maze: Maze
+    mlx_ptr: Any
+    is_animating: bool
+
     def __init__(self, maze: Maze) -> None:
+        """Initialize the application window, images,
+        and maze rendering components."""
         self.mlx_ptr = mlx.Mlx()
         self.mlx = None
         self.win = None
@@ -52,24 +70,27 @@ class MazeApp:
 
         # the actual MLX image object Required by (mlx_put_image_to_window,
         # redraw it later,to destroy it)
-        self.maze_obj = None
-        self.button_obj = None
+        self.maze_obj = cast(img_data, None)
+        self.button_obj = cast(img_data, None)
 
         # memory
-        self.maze_addr = None
-        self.button_addr = None
+        self.maze_addr = cast(img_data, None)
+        self.button_addr = cast(img_data, None)
 
         self.mlx_init()
         self.create_maze_img()
         self.create_button_img()
 
     def mlx_init(self) -> None:
+        """Create the MLX instance and open the display window."""
         self.mlx = self.mlx_ptr.mlx_init()
         self.win = self.mlx_ptr.mlx_new_window(
             self.mlx, dimentions.window_x, dimentions.window_y, "A_MAZE_ING"
         )
 
     def create_maze_img(self) -> None:
+        """Allocate the maze image buffer and fill it
+        with the background color."""
         self.maze_obj = self.mlx_ptr.mlx_new_image(
             self.mlx, dimentions.image_maze_x, dimentions.image_maze_y
         )
@@ -86,6 +107,8 @@ class MazeApp:
             self.mlx, self.win, self.maze_obj, 0, 0)
 
     def create_button_img(self) -> None:
+        """Allocate the button panel image
+        buffer and draw the buttons onto it."""
         self.button_obj = self.mlx_ptr.mlx_new_image(
             self.mlx, dimentions.image_button_x, dimentions.image_button_y
         )
@@ -104,8 +127,10 @@ class MazeApp:
         )
 
     def button_draw(self) -> None:
-        start = dimentions.sep_top_button
-        i = 0
+        """Draw all buttons with their background
+        color and centered label text."""
+        start: int = dimentions.sep_top_button
+        i: int = 0
 
         def draw_text(text: str, button_top: int) -> None:
             text = text.upper()
@@ -157,10 +182,13 @@ class MazeApp:
             i += 1
 
     def destroy_win(self, param: Any) -> None:
+        """Close the window and exit the MLX event loop."""
         self.mlx_ptr.mlx_destroy_window(self.mlx, self.win)
         self.mlx_ptr.mlx_loop_exit(self.mlx)
 
     def upade_image_maze(self, param: Any) -> int:
+        """Animate the maze drawing column by column,
+        then render the path once complete."""
         if self.is_animating is False:
             return 0
         startx = int(
@@ -272,8 +300,10 @@ class MazeApp:
             self.currentx += 1
         if self.currenty < self.maze.height:
             self.currenty += 1
+        return 1
 
     def path_draw(self) -> None:
+        """Highlight the solution path through the maze."""
         self.maze.is_path_draw = True
         startx = int(
             (dimentions.image_maze_x -
@@ -300,6 +330,7 @@ class MazeApp:
             self.mlx, self.win, self.maze_obj, 0, 0)
 
     def clear_image(self) -> None:
+        """Erase the maze area by filling it with the background color."""
         width = int((800 - (self.maze.width * self.maze.cell_size)) / 2)
         height = int((800 - (self.maze.height * self.maze.cell_size)) / 2)
         for i in range(height + (self.maze.cell_size * self.maze.height)):
@@ -308,6 +339,7 @@ class MazeApp:
                     j, i, dimentions.colors[0]["background"])
 
     def draw_maze_without_animation(self) -> None:
+        """Redraw the full maze instantly without any animation."""
         self.clear_image()
         startx = int(
             (dimentions.image_maze_x -
@@ -402,6 +434,8 @@ class MazeApp:
                                              self.win, self.maze_obj, 0, 0)
 
     def clicked_button(self, button: int, x: int, y: int, data: Any) -> None:
+        """Handle mouse click events and trigger the
+        corresponding button action."""
         i = 0
         while i < 4:
             if (
@@ -464,6 +498,8 @@ class MazeApp:
 
 
 def check_entry_exit(maze: Maze) -> int:
+    """Verify that the entry and exit points do
+    not overlap with the 42 pattern."""
     x_entry, y_entry = maze.entry
     x_exit, y_exit = maze.exit
     entry = [True for t in maze.fourty_two
@@ -481,6 +517,7 @@ def check_entry_exit(maze: Maze) -> int:
 
 
 def maze_draw(maze: Maze) -> int:
+    """Set up and launch the maze application, running the MLX event loop."""
     maze.my_42()
     if check_entry_exit(maze):
         mazeApp = MazeApp(maze)

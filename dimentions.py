@@ -1,17 +1,18 @@
-window_x = 1200
-window_y = 800
+from typing import Any, Dict, List
+window_x: int = 1200
+window_y: int = 800
 
-image_maze_x = 800
-image_maze_y = 800
+image_maze_x: int = 800
+image_maze_y: int = 800
 
-image_button_x = 400
-image_button_y = 800
+image_button_x: int = 400
+image_button_y: int = 800
 
-sep_top_button = 140
-sep_button = 140
-button_hight = 70
+sep_top_button: int = 140
+sep_button: int = 140
+button_hight: int = 70
 
-buttons = [
+buttons: List[Dict[str, Any]] = [
     {
         "text": "regenerate maze",
         "start_x": image_maze_x + 70,
@@ -34,7 +35,7 @@ buttons = [
     },
 ]
 
-colors = [
+colors: List[Dict[str, Any]] = [
     {"background": 0x0F0F0F},  # Almost black
     {"button_bg": 0x2A2A2A},  # Dark gray
     {"base_wall_color": 0x00FF00},  # White
@@ -57,7 +58,7 @@ colors = [
     {"path_color": 0xFFFFFF},
 ]
 
-font = {
+font: Dict[str, List[str]] = {
     "A": ["  X  ", " X X ", "XXXXX", "X   X", "X   X"],
     "B": ["XXXX ", "X   X", "XXXX ", "X   X", "XXXX "],
     "C": [" XXX ", "X   X", "X    ", "X   X", " XXX "],

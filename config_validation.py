@@ -1,12 +1,20 @@
+from typing import Any, Dict
+
+
 class ErrorInConfigFile(Exception):
     def __init__(self, message: str) -> None:
+        """Initialize the exception with a custom error message."""
         self.message = message
 
     def __str__(self) -> str:
+        """Format the exception as a readable error string."""
         return f"Error in your configuration file: {self.message}"
 
 
-def data_validation(data_dict: dict) -> None:
+def data_validation(data_dict: Dict[str, Any]) -> None:
+    """Validate the values of the configuration dictionary
+    and convert them to their proper types."""
+
     # PERFECT validation
     if data_dict["PERFECT"].upper() not in ("TRUE", "FALSE"):
         raise ErrorInConfigFile("'PERFECT' value should be TRUE or FALSE")
@@ -100,7 +108,10 @@ def data_validation(data_dict: dict) -> None:
         raise ErrorInConfigFile("OUTPUT_FILE is empty !!")
 
 
-def validation(text: str) -> dict:
+def validation(text: str) -> Dict[str, Any]:
+    """Parse the raw config file text, check for valid keys
+    and structure, and return a validated data dictionary."""
+
     mandatory = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT"]
     valid_keys = ["WIDTH", "HEIGHT", "ENTRY", "EXIT", "OUTPUT_FILE", "PERFECT",
                   "SEED"]

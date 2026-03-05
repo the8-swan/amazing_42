@@ -5,6 +5,8 @@ from maze_renderer import maze_draw
 
 
 def main() -> None:
+    """Read the config file path from the command line, validate it,
+    generate the maze, and launch the renderer."""
     args = sys.argv[1:]
     if args.__len__() > 1:
         print("Too many files , make sure to enter one file !!")

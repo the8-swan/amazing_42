@@ -2,18 +2,21 @@ from collections import deque
 import random
 from config_validation import ErrorInConfigFile
 import os
-from typing import Dict, List, Tuple, Optional, Deque
+from typing import Dict, List, Tuple, Optional, Deque, Any
 
 
 class Maze:
-    direction: Dict[str, Tuple[int, int, str, str]] = {
+    direction: dict[str, tuple[int, int, str, str]] = {
         "N": (0, -1, "N", "S"),
         "S": (0, +1, "S", "N"),
         "W": (-1, 0, "W", "E"),
         "E": (+1, 0, "E", "W"),
     }
 
-    def __init__(self, data: Dict) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
+        """Initialize the maze with dimensions, entry/exit points,
+        and an empty grid of cells."""
+
         self.width: int = data["WIDTH"]
         self.height: int = data["HEIGHT"]
         self.entry: Tuple[int, int] = data["ENTRY"]
@@ -21,7 +24,7 @@ class Maze:
         self.out_file: str = data["OUTPUT_FILE"]
         self.cell_size: int = self.calc_cell_size()
         self.wall_size: int = self.celc_wall_size()
-        self.path: List[Tuple[int, int]] = []
+        self.path: Deque[Tuple[int, int]] = deque()
         self.is_path_draw: bool = False
         self.perfect: bool = data["PERFECT"]
         self.dirs: List[str] = []
@@ -35,6 +38,8 @@ class Maze:
 
     class Cell:
         def __init__(self, row: int, column: int) -> None:
+            """Initialize the maze with dimensions, entry/exit points,
+            and an empty grid of cells."""
             self.row: int = row
             self.column: int = column
             self.walls: Dict[str, bool] = {"S": True, "N": True,
@@ -42,6 +47,7 @@ class Maze:
             self.is_visited: bool = False
 
     def create_cells(self, width: int, height: int) -> List[List["Maze.Cell"]]:
+        """Build and return the 2D grid of cells for the maze."""
         cells: List[List["Maze.Cell"]] = []
         for col in range(height):
             row_data: List["Maze.Cell"] = []
@@ -51,12 +57,15 @@ class Maze:
         return cells
 
     def celc_wall_size(self) -> int:
+        """Determine the wall thickness based on the cell size."""
         if self.cell_size <= 10:
             return 1
         return 2
 
     def calc_cell_size(self) -> int:
-        cell_size:int = 25
+        """Calculate the appropriate cell size so the maze
+        fits within the display window."""
+        cell_size: int = 25
         while cell_size * self.width >= 800:
             cell_size -= 1
             if cell_size == 0:
@@ -68,6 +77,8 @@ class Maze:
         return cell_size
 
     def my_42(self) -> None:
+        """Pre-mark a pattern of cells in the shape of '42'
+        at the center of the maze."""
         if self.width > 15 and self.height > 15:
             cells: int = max(1, 20 // self.cell_size)
             middle_w: int = int(self.width / 2)
@@ -127,6 +138,8 @@ class Maze:
             print("42 will not be drawn !!")
 
     def dsf_algorith(self) -> None:
+        """Generate the maze using a depth-first search
+        algorithm with backtracking."""
         stack: List[Tuple[int, int]] = []
         x: int
         y: int
@@ -161,12 +174,16 @@ class Maze:
                 stack.pop()
 
     def reset_maze(self) -> None:
+        """Reset all cells to their initial state with all walls
+        intact and unvisited."""
         for row in self.cells:
             for cell in row:
                 cell.is_visited = False
                 cell.walls = {"S": True, "N": True, "W": True, "E": True}
 
     def output_maze(self) -> None:
+        """Write the maze structure, entry, exit,
+        and solution path to the output file."""
         os.makedirs("output", exist_ok=True)
         with open("output/"+self.out_file, 'w') as f:
             for i in range(self.height):
@@ -192,10 +209,12 @@ class Maze:
             m_x, m_y = self.exit
             f.write(f"{x},{y}\n")
             f.write(f"{m_x},{m_y}\n")
-            for x in self.dirs:
-                f.write(x)
+            for dir_char in self.dirs:
+                f.write(dir_char)
 
     def not_perfect(self) -> None:
+        """Introduce random wall removals to create loops
+        and make the maze imperfect."""
         if self.perfect is False:
             unvisited: list[tuple[int, int]] = []
             n_dir: str = ""
@@ -216,8 +235,8 @@ class Maze:
                 unvisited.remove((x, y))
 
                 count: int = 0
-                for i in dirs:
-                    if self.cells[y][x].walls[i]:
+                for dir_key in dirs:
+                    if self.cells[y][x].walls[dir_key]:
                         count += 1
                 found: bool = True
                 i: int = 0
@@ -250,7 +269,8 @@ class Maze:
                         wall -= 1
 
     def wilson_algo(self) -> None:
-
+        """Generate the maze using Wilson's algorithm with
+        loop-erased random walks."""
         unvisited: list[tuple[int, int]] = []
         visited: list[tuple[int, int]] = []
 
@@ -324,14 +344,15 @@ class Maze:
                     unvisited.remove((l_x, l_y))
 
     def bfs_algo(self) -> None:
+        """Find the shortest path from entry to exit
+        using breadth-first search."""
         for r in range(len(self.cells)):
             for c in range(len(self.cells[0])):
                 self.cells[r][c].is_visited = False
-        x:int
-        y:int
-        d_x:int
-        d_y:int
-        
+        x: int
+        y: int
+        d_x: int
+        d_y: int
         x, y = self.entry
         d_x, d_y = self.exit
 
@@ -385,12 +406,10 @@ class Maze:
                 data.appendleft((m_x, m_y))
 
             x, y = cur
-            self.cells[y][x].path = True
             cur = (m_x, m_y)
             self.dirs.append(d)
 
         x, y = self.entry
-        self.cells[y][x].path = True
 
         self.dirs.reverse()
 
