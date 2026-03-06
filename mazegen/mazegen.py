@@ -226,7 +226,7 @@ class Maze:
             w: int = self.width
             h: int = self.height
 
-            wall: int = int(w * h * 0.01)
+            wall: int = int(w * h * 0.3)
 
             for r in range(h):
                 for c in range(w):

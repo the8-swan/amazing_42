@@ -1,7 +1,7 @@
-    WIDTH       = 70
+WIDTH = 150
 HEIGHT= 70
-#helloo
-ENTRY=0,4  
-    EXIT    =   19,69
+ENTRY = 0,0
+EXIT = 5,8
 OUTPUT_FILE = output.txt
 PERFECT  = False 
+SEED = 42

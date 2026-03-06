@@ -533,4 +533,4 @@ def maze_draw(maze: Maze) -> int:
         mazeApp.mlx_ptr.mlx_mouse_hook(
             mazeApp.win, mazeApp.clicked_button, None)
         mazeApp.mlx_ptr.mlx_loop(mazeApp.mlx)
-    return 0
+    return 1
