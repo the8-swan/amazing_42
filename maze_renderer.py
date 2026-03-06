@@ -294,7 +294,7 @@ class MazeApp:
                         enx, eny, dimentions.colors[5]["exit"]
                     )
             self.maze.bfs_algo()
-            if self.maze.is_path_draw :
+            if self.maze.is_path_draw:
                 self.path_draw()
             self.is_animating = False
         self.mlx_ptr.mlx_put_image_to_window(

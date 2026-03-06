@@ -117,7 +117,8 @@ def validation(text: str) -> Dict[str, Any]:
                   "SEED"]
     keys = 0
     lines = text.strip().split("\n")
-    line_wcommants = [line.strip() for line in lines if line.startswith('#') is False and line.strip()!= '']
+    line_wcommants = [line.strip() for line in lines
+                      if line.startswith('#') is False and line.strip() != '']
     lines_w = [line.strip().split("=") for line in line_wcommants]
     for line in lines_w:
         if line.__len__() != 2:
