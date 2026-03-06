@@ -26,7 +26,7 @@ class Maze:
         self.cell_size: int = self.calc_cell_size()
         self.wall_size: int = self.celc_wall_size()
         self.path: Deque[Tuple[int, int]] = deque()
-        self.is_path_draw: bool = False
+        self.is_path_draw: bool = True
         self.perfect: bool = data["PERFECT"]
         self.dirs: List[str] = []
         self.fourty_two: List["Maze.Cell"] = []

@@ -117,7 +117,7 @@ def validation(text: str) -> Dict[str, Any]:
                   "SEED"]
     keys = 0
     lines = text.strip().split("\n")
-    line_wcommants = [line for line in lines if line[0] != "#"]
+    line_wcommants = [line.strip() for line in lines if line.startswith('#') is False and line.strip()!= '']
     lines_w = [line.strip().split("=") for line in line_wcommants]
     for line in lines_w:
         if line.__len__() != 2:
@@ -136,6 +136,6 @@ def validation(text: str) -> Dict[str, Any]:
             "A mandatory key is missing, "
             f"verify your file again. {mandatory}"
         )
-    data_dict = {key.strip(): value.strip() for key, value in lines_w}
+    data_dict = {key.strip().upper(): value.strip() for key, value in lines_w}
     data_validation(data_dict)
     return data_dict
