@@ -220,57 +220,62 @@ class Maze:
         """Introduce random wall removals to create loops
         and make the maze imperfect."""
         if self.perfect is False:
+          
             unvisited: list[tuple[int, int]] = []
-            n_dir: str = ""
+            visited: list[tuple[int, int]] = []
             dirs: list[str] = ['E', 'W', 'N', 'S']
             w: int = self.width
             h: int = self.height
 
-            wall: int = int(w * h * 0.3)
+            wall: int = int(h*w*0.15)
 
             for r in range(h):
                 for c in range(w):
-                    unvisited.append((c, r))
-
-            while wall != 0 and unvisited:
+                    found: bool = True
+                    i: int = 0
+                    while i < 4 and found:
+                        if not self.cells[r][c].walls[dirs[i]]:
+                            found = False
+                        i += 1
+                    if found:
+                        visited.append((c, r))
+                    else:
+                        unvisited.append((c, r))
+          
+            while wall > 0 and unvisited:
                 x: int
                 y: int
-                x, y = random.choice(unvisited)
+                if not unvisited:
+                    break
+                x, y = random.choice((unvisited))
                 unvisited.remove((x, y))
+                dict_42: dict[str, bool] = {}
+                for d in dirs:
+                    m_x, m_y, n_dir, m_dir = self.direction[d]
+                    n_x, n_y = x + m_x, y + m_y
+                    if 0 <= n_x < w and 0 <= n_y < h:
+                        if (n_x, n_y) in visited:
+                            dict_42[n_dir] = False
+                        else:
+                            dict_42[n_dir] = True
+                    else:
+                        dict_42[n_dir] = False
 
-                count: int = 0
-                for dir_key in dirs:
-                    if self.cells[y][x].walls[dir_key]:
-                        count += 1
+                random.shuffle(dirs)
                 found: bool = True
                 i: int = 0
                 while i < 4 and found:
-                    m_x: int
-                    m_y: int
-                    m_x, m_y, _, _ = self.direction[dirs[i]]
-                    n_x: int = m_x + x
-                    n_y: int = m_y + y
+                    next_dir = dirs[i]
+                    m_x, m_y, n_dir, m_dir = self.direction[next_dir]
+                    n_x, n_y = x + m_x, y + m_y
                     if 0 <= n_x < w and 0 <= n_y < h:
-                        num: int = 0
-                        for j in dirs:
-                            if self.cells[n_y][n_x].walls[j]:
-                                num += 1
-                        if num == 4:
+                        if (self.cells[n_y][n_x].walls[m_dir]
+                                and dict_42[next_dir]):
+                            self.cells[y][x].walls[n_dir] = False
+                            self.cells[n_y][n_x].walls[m_dir] = False
+                            wall -= 1
                             found = False
-                            n_dir = dirs[i]
                     i += 1
-
-                d = random.choice(dirs)
-                if (self.cells[y][x].walls[d]
-                        and (x != 0 or d != 'W')
-                        and (x != w-1 or d != 'E')
-                        and (y != 0 or d != 'N')
-                        and (y != h-1 or d != 'S')
-                        and 0 < count <= 2):
-                    if found or (not found and n_dir != d):
-
-                        self.cells[y][x].walls[d] = False
-                        wall -= 1
 
     def wilson_algo(self) -> None:
         """Generate the maze using Wilson's algorithm with

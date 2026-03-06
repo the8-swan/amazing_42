@@ -9,6 +9,8 @@ packages = [
     { include = "mazegen"},
 ]
 
+[tool.poetry.dependencies]
+python = "^3.10"
 
 [build-system]
 requires = ["poetry-core"]
