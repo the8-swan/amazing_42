@@ -20,7 +20,6 @@ def main() -> None:
                 maze = Maze(data)
                 if maze_draw(maze):
                     maze.output_maze()
-                print(data)
         except (FileNotFoundError, config_validation.ErrorInConfigFile) as e:
             print(e)
 
