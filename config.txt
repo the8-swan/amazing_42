@@ -1,12 +1,6 @@
-width = 10
-HEIGHT                      = 10
+width = 100
+HEIGHT= 100
 ENTRY = 0,0
 EXIT = 5,8
-
-#hellooo
-
-
-        
-OUTPUT_FILE = output.txt  kfgjdghkjfdh
-PERFECT  = False 
-SEED = 42
+OUTPUT_FILE = output.txt
+PERFECT  = True
