@@ -78,7 +78,7 @@ Wilson's algorithm generates mazes through loop-erased random walks. Starting fr
 
 ## Reusable Module
 
-The maze generation logic is packaged as a standalone installable Python module. The package is called `mazegen` and the built file (`.whl` or `.tar.gz`) is located at the root of the repository.
+The maze generation logic is packaged as a standalone installable Python module. The package is called `mazegen` and the built file (`.whl`) is located at the root of the repository.
 
 ### What is reusable
 
@@ -334,8 +334,6 @@ The separation of responsibilities between generation and rendering worked well 
 - MiniLibX (graphical rendering)
 - mypy (static type checking)
 - flake8 (code style)
-- build / pip (packaging)
-- Claude AI (used to help with type hints, docstrings, and README structure)
 
 ## Resources
 
@@ -351,9 +349,9 @@ The separation of responsibilities between generation and rendering worked well 
 ### AI usage
 
 Claude AI was used to assist with the following tasks:
-- Adding type hints and fixing mypy errors across all files
-- Writing docstrings for all functions and classes
-- Structuring and writing this README
+- Understanding some complex concepts . 
+- Correcting docstrings for some functions and classes
+- Structuring this README
 - Advising on the Python packaging setup (pyproject.toml structure)
 
-All AI-generated content was reviewed, tested, and adapted by the team before being included in the project.
+Made by ❤️
